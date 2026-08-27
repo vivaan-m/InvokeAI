@@ -24,10 +24,15 @@ const sx = {
 type Props = {
   imageDTO: ImageDTO;
   asThumbnail?: boolean;
+  /**
+   * When true, the image is not registered as a drag source (e.g. while zoomed in the viewer, where
+   * a left-button drag pans the image instead of initiating a board-move).
+   */
+  disableDrag?: boolean;
 } & ImageProps;
 
 export const DndImage = memo(
-  forwardRef(({ imageDTO, asThumbnail, ...rest }: Props, forwardedRef) => {
+  forwardRef(({ imageDTO, asThumbnail, disableDrag, ...rest }: Props, forwardedRef) => {
     const [isDragging, setIsDragging] = useState(false);
     const ref = useRef<HTMLImageElement>(null);
     useImperativeHandle(forwardedRef, () => ref.current!, []);
@@ -39,7 +44,7 @@ export const DndImage = memo(
 
     useEffect(() => {
       const element = ref.current;
-      if (!element) {
+      if (!element || disableDrag) {
         return;
       }
       return combine(
@@ -64,7 +69,7 @@ export const DndImage = memo(
           },
         })
       );
-    }, [imageDTO]);
+    }, [imageDTO, disableDrag]);
 
     useImageContextMenu(imageDTO, ref);
 

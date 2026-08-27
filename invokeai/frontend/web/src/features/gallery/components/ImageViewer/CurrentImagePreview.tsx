@@ -3,7 +3,6 @@ import { useStore } from '@nanostores/react';
 import { useAppSelector } from 'app/store/storeHooks';
 import { useMediaUrl } from 'features/auth/store/mediaCookieRefresh';
 import { CanvasAlertsInvocationProgress } from 'features/controlLayers/components/CanvasAlerts/CanvasAlertsInvocationProgress';
-import { DndImage } from 'features/dnd/DndImage';
 import ImageMetadataViewer from 'features/gallery/components/ImageMetadataViewer/ImageMetadataViewer';
 import NextPrevItemButtons from 'features/gallery/components/NextPrevItemButtons';
 import { useNextPrevItemNavigation } from 'features/gallery/components/useNextPrevItemNavigation';
@@ -26,6 +25,7 @@ import { ProgressImage } from './ProgressImage2';
 import { ProgressImageTiles } from './ProgressImageTiles';
 import { ProgressIndicator } from './ProgressIndicator2';
 import { useSelectedItemReveal } from './useSelectedItemReveal';
+import { ZoomableImage } from './ZoomableImage';
 
 export const CurrentImagePreview = memo(({ imageDTO }: { imageDTO: ImageDTO | null }) => {
   const activeTab = useAppSelector(selectActiveTab);
@@ -206,7 +206,7 @@ export const CurrentImagePreview = memo(({ imageDTO }: { imageDTO: ImageDTO | nu
     >
       {imageToRender && (
         <Flex w="full" h="full" position="absolute" alignItems="center" justifyContent="center">
-          <DndImage imageDTO={imageToRender} onLoad={onLoadRenderedImage} borderRadius="base" />
+          <ZoomableImage imageDTO={imageToRender} onLoad={onLoadRenderedImage} />
         </Flex>
       )}
       {!imageToRender && <NoContentForViewer />}

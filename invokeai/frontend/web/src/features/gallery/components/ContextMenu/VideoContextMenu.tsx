@@ -3,6 +3,7 @@ import { Menu, MenuButton, MenuDivider, MenuList, Portal, useGlobalMenuClose } f
 import { useStore } from '@nanostores/react';
 import { useAppSelector } from 'app/store/storeHooks';
 import { useAssertSingleton } from 'common/hooks/useAssertSingleton';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { ContextMenuItemChangeBoardVideo } from 'features/gallery/components/ContextMenu/MenuItems/ContextMenuItemChangeBoardVideo';
 import { ContextMenuItemDeleteVideo } from 'features/gallery/components/ContextMenu/MenuItems/ContextMenuItemDeleteVideo';
 import { ContextMenuItemDownloadVideo } from 'features/gallery/components/ContextMenu/MenuItems/ContextMenuItemDownloadVideo';
@@ -129,6 +130,7 @@ MenuContent.displayName = 'VideoContextMenuContent';
  * Split out from the visible menu to keep re-renders cheap.
  */
 const VideoContextMenuEventLogical = memo(() => {
+  const isMobile = useIsMobile();
   const lastPositionRef = useRef<{ x: number; y: number }>({ x: -1, y: -1 });
   const longPressTimeoutRef = useRef(0);
   const animationTimeoutRef = useRef(0);
@@ -218,15 +220,23 @@ const VideoContextMenuEventLogical = memo(() => {
 
   useEffect(() => {
     const controller = new AbortController();
+
+    // Context menu events (right-click) always apply.
     window.addEventListener('contextmenu', onContextMenu, { signal: controller.signal });
-    window.addEventListener('pointerdown', onPointerDown, { signal: controller.signal });
-    window.addEventListener('pointerup', onPointerUp, { signal: controller.signal });
-    window.addEventListener('pointercancel', onPointerCancel, { signal: controller.signal });
-    window.addEventListener('pointermove', onPointerMove, { signal: controller.signal });
+
+    // Long press to open the menu is a touch/pen affordance. On phones it collides with the
+    // pinch/pan zoom gestures in the viewer, so we skip it on mobile.
+    if (!isMobile) {
+      window.addEventListener('pointerdown', onPointerDown, { signal: controller.signal });
+      window.addEventListener('pointerup', onPointerUp, { signal: controller.signal });
+      window.addEventListener('pointercancel', onPointerCancel, { signal: controller.signal });
+      window.addEventListener('pointermove', onPointerMove, { signal: controller.signal });
+    }
+
     return () => {
       controller.abort();
     };
-  }, [onContextMenu, onPointerCancel, onPointerDown, onPointerMove, onPointerUp]);
+  }, [isMobile, onContextMenu, onPointerCancel, onPointerDown, onPointerMove, onPointerUp]);
 
   useEffect(
     () => () => {
