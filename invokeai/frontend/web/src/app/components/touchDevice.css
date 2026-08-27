@@ -3,3 +3,16 @@
   visibility: hidden !important;
   opacity: 0 !important;
 }
+
+/*
+ * iOS Safari auto-zooms the whole page when a focusable text field has a computed font-size below
+ * 16px. That makes tapping any input (prompt, metadata, etc.) scale the entire site. Setting a
+ * minimum of 16px on touch devices stops the browser-level zoom while leaving the visual size to
+ * the component (most inputs already render at 16px; this is a floor, not a restyle).
+ */
+.invokeai-touch-device input,
+.invokeai-touch-device textarea,
+.invokeai-touch-device [contenteditable='true'],
+.invokeai-touch-device [role='textbox'] {
+  font-size: 16px;
+}

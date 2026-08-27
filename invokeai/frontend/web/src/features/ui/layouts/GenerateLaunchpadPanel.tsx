@@ -1,4 +1,5 @@
 import { Alert, Button, Flex, Grid, Text } from '@invoke-ai/ui-library';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { navigationApi } from 'features/ui/layouts/navigation-api';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +11,7 @@ import { LaunchpadGenerateFromTextButton } from './LaunchpadGenerateFromTextButt
 
 export const GenerateLaunchpadPanel = memo(() => {
   const { t } = useTranslation();
+  const isMobile = useIsMobile();
   const newCanvasSession = useCallback(() => {
     navigationApi.switchToTab('canvas');
   }, []);
@@ -34,7 +36,7 @@ export const GenerateLaunchpadPanel = memo(() => {
           </Text>
         </Flex>
       </Grid>
-      <LaunchpadGenerateFromTextButton />
+      {!isMobile && <LaunchpadGenerateFromTextButton />}
       <LaunchpadAddStyleReference />
       <Alert status="info" borderRadius="base" flexDir="column" gap={2} overflow="unset">
         <Text fontSize="md" fontWeight="semibold">

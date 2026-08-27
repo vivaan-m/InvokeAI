@@ -3649,6 +3649,9 @@
             "customNodesTab": "$t(ui.tabs.customNodes) $t(common.tab)",
             "gallery": "Gallery"
         },
+        "mobile": {
+            "desktopOnlyTab": "This view is optimized for larger screens. Open Invoke on a tablet or desktop for the full experience."
+        },
         "panels": {
             "launchpad": "Launchpad",
             "workflowEditor": "Workflow Editor",

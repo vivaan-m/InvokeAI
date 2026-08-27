@@ -5,7 +5,9 @@ import { Flex } from '@invoke-ai/ui-library';
 import { useStore } from '@nanostores/react';
 import { useAppSelector } from 'app/store/storeHooks';
 import Loading from 'common/components/Loading/Loading';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { useIsCustomNodesEnabled } from 'features/customNodes/useIsCustomNodesEnabled';
+import { MobileTabContent } from 'features/ui/components/MobileTabContent';
 import { VerticalNavBar } from 'features/ui/components/VerticalNavBar';
 import { CanvasTabAutoLayout } from 'features/ui/layouts/canvas-tab-auto-layout';
 import { CustomNodesTabAutoLayout } from 'features/ui/layouts/customnodes-tab-auto-layout';
@@ -19,8 +21,10 @@ import { selectActiveTab } from 'features/ui/store/uiSelectors';
 import { memo, useEffect } from 'react';
 
 export const AppContent = memo(() => {
+  const isMobile = useIsMobile();
+
   return (
-    <Flex position="relative" w="full" h="full" overflow="hidden">
+    <Flex position="relative" w="full" h="full" overflow="hidden" flexDir={isMobile ? 'column' : 'row'}>
       <VerticalNavBar />
       <TabContent />
     </Flex>
@@ -30,6 +34,7 @@ AppContent.displayName = 'AppContent';
 
 const TabContent = memo(() => {
   const tab = useAppSelector(selectActiveTab);
+  const isMobile = useIsMobile();
   const { isKnown: isCustomNodesKnown, isAllowed: isCustomNodesAllowed } = useIsCustomNodesEnabled();
 
   // Redirect away from customNodes only once we *know* the user is denied.
@@ -42,6 +47,14 @@ const TabContent = memo(() => {
       navigationApi.switchToTab('generate');
     }
   }, [tab, isCustomNodesKnown, isCustomNodesAllowed]);
+
+  if (isMobile) {
+    return (
+      <Flex position="relative" w="full" h="full" overflow="hidden">
+        <MobileTabContent />
+      </Flex>
+    );
+  }
 
   return (
     <Flex position="relative" w="full" h="full" overflow="hidden">

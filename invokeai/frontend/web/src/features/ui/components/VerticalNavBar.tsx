@@ -1,4 +1,5 @@
 import { Divider, Flex, Spacer } from '@invoke-ai/ui-library';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { UserMenu } from 'features/auth/components/UserMenu';
 import { useIsCustomNodesEnabled } from 'features/customNodes/useIsCustomNodesEnabled';
 import InvokeAILogoComponent from 'features/system/components/InvokeAILogoComponent';
@@ -21,6 +22,18 @@ import { Notifications } from './Notifications';
 import { TabButton } from './TabButton';
 
 export const VerticalNavBar = memo(() => {
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    return <MobileBottomNav />;
+  }
+
+  return <DesktopNavBar />;
+});
+
+VerticalNavBar.displayName = 'VerticalNavBar';
+
+const DesktopNavBar = memo(() => {
   const { t } = useTranslation();
   const { isAllowed: isCustomNodesAllowed } = useIsCustomNodesEnabled();
 
@@ -53,5 +66,41 @@ export const VerticalNavBar = memo(() => {
     </Flex>
   );
 });
+DesktopNavBar.displayName = 'DesktopNavBar';
 
-VerticalNavBar.displayName = 'VerticalNavBar';
+/**
+ * On phone-width screens the vertical icon sidebar is replaced by a horizontal bottom nav bar so
+ * the full viewport width is available to content.
+ */
+const MobileBottomNav = memo(() => {
+  const { t } = useTranslation();
+  const { isAllowed: isCustomNodesAllowed } = useIsCustomNodesEnabled();
+
+  return (
+    <Flex
+      flexDir="row"
+      alignItems="center"
+      justifyContent="space-around"
+      w="full"
+      h={14}
+      flexShrink={0}
+      bg="base.900"
+      borderTopWidth={1}
+      borderTopColor="base.700"
+      position="relative"
+      px={2}
+      gap={1}
+    >
+      <TabButton tab="generate" icon={<PiTextAaBold />} label={t('ui.tabs.generate')} />
+      <TabButton tab="canvas" icon={<PiBoundingBoxBold />} label={t('ui.tabs.canvas')} />
+      <TabButton tab="upscaling" icon={<PiFrameCornersBold />} label={t('ui.tabs.upscaling')} />
+      <TabButton tab="workflows" icon={<PiFlowArrowBold />} label={t('ui.tabs.workflows')} />
+      <TabButton tab="models" icon={<PiCubeBold />} label={t('ui.tabs.models')} />
+      {isCustomNodesAllowed && (
+        <TabButton tab="customNodes" icon={<PiCircuitryBold />} label={t('ui.tabs.customNodes')} />
+      )}
+      <TabButton tab="queue" icon={<PiQueueBold />} label={t('ui.tabs.queue')} />
+    </Flex>
+  );
+});
+MobileBottomNav.displayName = 'MobileBottomNav';
