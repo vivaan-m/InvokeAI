@@ -1,6 +1,7 @@
 import type { FormLabelProps } from '@invoke-ai/ui-library';
 import { Flex, FormControlGroup, StandaloneAccordion } from '@invoke-ai/ui-library';
 import { useAppSelector } from 'app/store/storeHooks';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { selectExternalProviderId, selectIsExternal } from 'features/controlLayers/store/paramsSlice';
 import { ExternalModelImageSizeSelect } from 'features/parameters/components/Dimensions/ExternalModelImageSizeSelect';
 import { ExternalModelResolutionSelect } from 'features/parameters/components/Dimensions/ExternalModelResolutionSelect';
@@ -19,6 +20,7 @@ export const ExternalSettingsAccordion = memo(() => {
   const { t } = useTranslation();
   const isExternal = useAppSelector(selectIsExternal);
   const providerId = useAppSelector(selectExternalProviderId);
+  const isMobile = useIsMobile();
   const { isOpen, onToggle } = useStandaloneAccordionToggle({
     id: 'external-settings',
     defaultIsOpen: true,
@@ -36,7 +38,7 @@ export const ExternalSettingsAccordion = memo(() => {
       onToggle={onToggle}
     >
       <Flex gap={4} p={4} flexDir="column" data-testid="external-settings-accordion">
-        <FormControlGroup formLabelProps={formLabelProps}>
+        <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps}>
           <ExternalModelResolutionSelect />
           <ExternalModelImageSizeSelect />
           {providerId === 'openai' && <OpenAIProviderOptions />}

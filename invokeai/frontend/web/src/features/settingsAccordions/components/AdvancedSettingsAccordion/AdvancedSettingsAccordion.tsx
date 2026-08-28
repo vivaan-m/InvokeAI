@@ -3,6 +3,7 @@ import { Flex, FormControlGroup, SimpleGrid, StandaloneAccordion } from '@invoke
 import { skipToken } from '@reduxjs/toolkit/query';
 import { createMemoizedSelector } from 'app/store/createMemoizedSelector';
 import { useAppSelector } from 'app/store/storeHooks';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import {
   selectIsAnima,
   selectIsErnieImage,
@@ -127,6 +128,7 @@ export const AdvancedSettingsAccordion = memo(() => {
     [vaeConfig]
   );
   const badges = useAppSelector(selectBadges);
+  const isMobile = useIsMobile();
   const { t } = useTranslation();
   const { isOpen, onToggle } = useStandaloneAccordionToggle({
     id: `'advanced-settings-generate`,
@@ -157,12 +159,12 @@ export const AdvancedSettingsAccordion = memo(() => {
           !isWan &&
           !isIdeogram4 && (
             <>
-              <FormControlGroup formLabelProps={formLabelProps}>
+              <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps}>
                 <ParamClipSkip />
                 <ParamCFGRescaleMultiplier />
               </FormControlGroup>
               <Flex gap={4} w="full">
-                <FormControlGroup formLabelProps={formLabelProps2}>
+                <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps2}>
                   <SimpleGrid columns={2} spacing={4} w="full">
                     <ParamSeamlessXAxis />
                     <ParamSeamlessYAxis />
@@ -178,62 +180,62 @@ export const AdvancedSettingsAccordion = memo(() => {
             </>
           )}
         {isFLUX && !isFlux2 && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamT5EncoderModelSelect />
             <ParamCLIPEmbedModelSelect />
           </FormControlGroup>
         )}
         {isFlux2 && !isFlux2Dev && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamFlux2KleinModelSelect />
           </FormControlGroup>
         )}
         {isFlux2Dev && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamFlux2DevModelSelect />
           </FormControlGroup>
         )}
         {isSD3 && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamT5EncoderModelSelect />
             <ParamCLIPLEmbedModelSelect />
             <ParamCLIPGEmbedModelSelect />
           </FormControlGroup>
         )}
         {isZImage && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamZImageQwen3VaeModelSelect />
           </FormControlGroup>
         )}
         {isQwenImage && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamQwenImageComponentSourceSelect />
             <ParamQwenImageQuantization />
           </FormControlGroup>
         )}
         {isAnima && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamAnimaModelSelect />
           </FormControlGroup>
         )}
         {isErnieImage && (
-          <FormControlGroup formLabelProps={formLabelProps}>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps}>
             <ParamErnieImagePromptEnhancer />
           </FormControlGroup>
         )}
         {isKrea2 && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamKrea2ModelSelects />
           </FormControlGroup>
         )}
         {isWan && (
-          <FormControlGroup>
+          <FormControlGroup orientation={isMobile ? 'vertical' : undefined}>
             <ParamWanModelSelects />
           </FormControlGroup>
         )}
         {isIdeogram4 && (
           <>
-            <FormControlGroup formLabelProps={formLabelProps}>
+            <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps}>
               <ParamIdeogram4Steps />
               <ParamIdeogram4GuidanceScale />
               <ParamIdeogram4Mu />

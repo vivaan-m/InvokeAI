@@ -11,6 +11,8 @@ import { memo, useCallback, useRef } from 'react';
 const sx: SystemStyleObject = {
   '&[data-selected=true]': {
     svg: { fill: 'invokeYellow.300' },
+    bg: 'base.800',
+    borderRadius: 'lg',
   },
 };
 

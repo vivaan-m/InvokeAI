@@ -1,12 +1,11 @@
 import { Box, Flex, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from '@invoke-ai/ui-library';
 import { useAppSelector } from 'app/store/storeHooks';
-import { useIsMobile } from 'common/hooks/useIsMobile';
 import { useIsCustomNodesEnabled } from 'features/customNodes/useIsCustomNodesEnabled';
 import { BoardsListWrapper } from 'features/gallery/components/Boards/BoardsList/BoardsListWrapper';
 import { GalleryImageGrid } from 'features/gallery/components/GalleryImageGrid';
 import { ImageViewerPanel } from 'features/gallery/components/ImageViewer/ImageViewerPanel';
+import { InvokeButton } from 'features/queue/components/InvokeQueueBackButton';
 import { AutoLayoutProvider } from 'features/ui/layouts/auto-layout-context';
-import { GenerateLaunchpadPanel } from 'features/ui/layouts/GenerateLaunchpadPanel';
 import { GenerateTabLeftPanel } from 'features/ui/layouts/GenerateTabLeftPanel';
 import { navigationApi } from 'features/ui/layouts/navigation-api';
 import { selectActiveTab } from 'features/ui/store/uiSelectors';
@@ -30,58 +29,67 @@ MobileTabContent.displayName = 'MobileTabContent';
 const MOBILE_GALLERY_TAB = 0;
 
 /**
- * Phone-width layout for the Generate tab: a single scrollable column with the parameters and
- * launchpad on top, and a Gallery/Image segmented section below so the viewer and gallery don't
- * compete for the narrow viewport.
+ * Phone-width layout for the Generate tab. The parameters and gallery/viewer/boards live in a
+ * scrollable body, while the Generate (Invoke) action is pinned to a fixed action bar above the
+ * bottom nav so it is always thumb-reachable, even after scrolling down to the prompt. A single
+ * Invoke button is shown (the top-of-parameters one is hidden) to avoid a duplicate CTA.
  */
 const MobileGenerateTab = memo(() => {
   const { t } = useTranslation();
-  const isMobile = useIsMobile();
   const [subView, setSubView] = useState<number>(MOBILE_GALLERY_TAB);
 
   return (
     <AutoLayoutProvider tab="generate">
-      <Flex flexDir="column" w="full" h="full" overflowY="auto" overflowX="hidden" gap={2} p={2}>
-        <Box w="full" flexShrink={0} h="70vh">
-          <GenerateTabLeftPanel />
+      <Flex flexDir="column" w="full" h="full">
+        <Box flex={1} overflowY="auto" overflowX="hidden" gap={2} p={2}>
+          <GenerateTabLeftPanel hideInvokeButton />
+          <Tabs
+            index={subView}
+            onChange={setSubView}
+            w="full"
+            flexShrink={0}
+            display="flex"
+            flexDir="column"
+            variant="line"
+          >
+            <TabList>
+              <Tab>{t('ui.tabs.gallery')}</Tab>
+              <Tab>{t('ui.panels.imageViewer')}</Tab>
+              <Tab>{t('boards.boards')}</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel p={0} pt={2} w="full">
+                <Box w="full" h="60vh">
+                  <GalleryImageGrid />
+                </Box>
+              </TabPanel>
+              <TabPanel p={0} pt={2} w="full">
+                <Box w="full" h="60vh">
+                  <ImageViewerPanel />
+                </Box>
+              </TabPanel>
+              <TabPanel p={0} pt={2} w="full">
+                <Box w="full" h="60vh">
+                  <BoardsListWrapper />
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Box>
-        {!isMobile && (
-          <Box w="full" flexShrink={0}>
-            <GenerateLaunchpadPanel />
-          </Box>
-        )}
-        <Tabs
-          index={subView}
-          onChange={setSubView}
-          w="full"
+        <Flex
           flexShrink={0}
-          display="flex"
-          flexDir="column"
-          variant="line"
+          w="full"
+          bg="base.900"
+          borderTopWidth={1}
+          borderTopColor="base.700"
+          px={2}
+          py={2}
+          alignItems="center"
+          style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 8px)' }}
+          aria-label={t('ui.mobile.generateActionBar')}
         >
-          <TabList>
-            <Tab>{t('ui.tabs.gallery')}</Tab>
-            <Tab>{t('ui.panels.imageViewer')}</Tab>
-            <Tab>{t('boards.boards')}</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel p={0} pt={2} w="full">
-              <Box w="full" h="60vh">
-                <GalleryImageGrid />
-              </Box>
-            </TabPanel>
-            <TabPanel p={0} pt={2} w="full">
-              <Box w="full" h="60vh">
-                <ImageViewerPanel />
-              </Box>
-            </TabPanel>
-            <TabPanel p={0} pt={2} w="full">
-              <Box w="full" h="60vh">
-                <BoardsListWrapper />
-              </Box>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+          <InvokeButton fullWidth />
+        </Flex>
       </Flex>
     </AutoLayoutProvider>
   );

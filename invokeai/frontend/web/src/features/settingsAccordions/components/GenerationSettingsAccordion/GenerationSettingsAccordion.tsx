@@ -3,6 +3,7 @@ import { Box, Expander, Flex, FormControlGroup, StandaloneAccordion } from '@inv
 import { EMPTY_ARRAY } from 'app/store/constants';
 import { createMemoizedSelector } from 'app/store/createMemoizedSelector';
 import { useAppSelector } from 'app/store/storeHooks';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { selectLoRAsSlice } from 'features/controlLayers/store/lorasSlice';
 import {
   selectBase,
@@ -77,6 +78,7 @@ export const GenerationSettingsAccordion = memo(() => {
   // PiD is available for any base whose graph builder wires a PiD decode (currently FLUX and FLUX.2).
   const isPidSupported = getIsPidSupportedBase(modelConfig?.base);
   const hasExpanderContent = isExternal ? modelSupportsGuidance || modelSupportsSteps : true;
+  const isMobile = useIsMobile();
 
   const selectBadges = useMemo(
     () =>
@@ -114,7 +116,7 @@ export const GenerationSettingsAccordion = memo(() => {
         {hasExpanderContent && (
           <Expander label={t('accordions.advanced.options')} isOpen={isOpenExpander} onToggle={onToggleExpander}>
             <Flex gap={4} flexDir="column" pb={4}>
-              <FormControlGroup formLabelProps={formLabelProps}>
+              <FormControlGroup orientation={isMobile ? 'vertical' : undefined} formLabelProps={formLabelProps}>
                 {shouldShowStandardScheduler(base) && <ParamScheduler />}
                 {!isExternal && (isFLUX || isFlux2) && <ParamFluxScheduler />}
                 {!isExternal && isZImage && <ParamZImageScheduler />}

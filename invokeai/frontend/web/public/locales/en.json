@@ -3650,7 +3650,8 @@
             "gallery": "Gallery"
         },
         "mobile": {
-            "desktopOnlyTab": "This view is optimized for larger screens. Open Invoke on a tablet or desktop for the full experience."
+            "desktopOnlyTab": "This view is optimized for larger screens. Open Invoke on a tablet or desktop for the full experience.",
+            "generateActionBar": "Generate"
         },
         "panels": {
             "launchpad": "Launchpad",

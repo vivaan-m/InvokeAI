@@ -12,7 +12,7 @@ import { InvokeButtonTooltip } from './InvokeButtonTooltip/InvokeButtonTooltip';
 
 const invoke = 'Invoke';
 
-export const InvokeButton = memo(() => {
+export const InvokeButton = memo(({ fullWidth = false }: { fullWidth?: boolean }) => {
   const queue = useInvoke();
   const shift = useShiftModifier();
   const isLoadingDynamicPrompts = useAppSelector(selectDynamicPromptsIsLoading);
@@ -20,7 +20,7 @@ export const InvokeButton = memo(() => {
   const { canWriteImages } = useBoardAccess(autoAddBoard);
 
   return (
-    <Flex pos="relative" w="200px">
+    <Flex pos="relative" w={fullWidth ? 'full' : '200px'}>
       <QueueIterationsNumberInput />
       <InvokeButtonTooltip prepend={shift}>
         <Button
@@ -32,7 +32,7 @@ export const InvokeButton = memo(() => {
           variant="solid"
           colorScheme="invokeYellow"
           size="lg"
-          w="calc(100% - 60px)"
+          w={fullWidth ? 'full' : 'calc(100% - 60px)'}
           flexShrink={0}
           justifyContent="space-between"
           spinnerPlacement="end"

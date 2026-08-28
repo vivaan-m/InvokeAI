@@ -2,6 +2,7 @@ import type { FormLabelProps } from '@invoke-ai/ui-library';
 import { Flex, FormControlGroup, StandaloneAccordion, Text } from '@invoke-ai/ui-library';
 import { createMemoizedSelector } from 'app/store/createMemoizedSelector';
 import { useAppSelector } from 'app/store/storeHooks';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { selectIsRefinerModelSelected, selectParamsSlice } from 'features/controlLayers/store/paramsSlice';
 import ParamSDXLRefinerCFGScale from 'features/sdxl/components/SDXLRefiner/ParamSDXLRefinerCFGScale';
 import ParamSDXLRefinerModelSelect from 'features/sdxl/components/SDXLRefiner/ParamSDXLRefinerModelSelect';
@@ -60,18 +61,27 @@ RefinerSettingsAccordionNoRefiner.displayName = 'RefinerSettingsAccordionNoRefin
 
 const RefinerSettingsAccordionContent: React.FC = memo(() => {
   const isRefinerModelSelected = useAppSelector(selectIsRefinerModelSelected);
+  const isMobile = useIsMobile();
 
   return (
-    <FormControlGroup isDisabled={!isRefinerModelSelected}>
+    <FormControlGroup orientation={isMobile ? 'vertical' : undefined} isDisabled={!isRefinerModelSelected}>
       <Flex p={4} gap={4} flexDir="column" minW={0}>
         <ParamSDXLRefinerModelSelect />
-        <FormControlGroup formLabelProps={stepsScaleLabelProps} isDisabled={!isRefinerModelSelected}>
+        <FormControlGroup
+          orientation={isMobile ? 'vertical' : undefined}
+          formLabelProps={stepsScaleLabelProps}
+          isDisabled={!isRefinerModelSelected}
+        >
           <ParamSDXLRefinerScheduler />
           <ParamSDXLRefinerSteps />
           <ParamSDXLRefinerCFGScale />
           <ParamSDXLRefinerStart />
         </FormControlGroup>
-        <FormControlGroup formLabelProps={aestheticLabelProps} isDisabled={!isRefinerModelSelected}>
+        <FormControlGroup
+          orientation={isMobile ? 'vertical' : undefined}
+          formLabelProps={aestheticLabelProps}
+          isDisabled={!isRefinerModelSelected}
+        >
           <ParamSDXLRefinerPositiveAestheticScore />
           <ParamSDXLRefinerNegativeAestheticScore />
         </FormControlGroup>

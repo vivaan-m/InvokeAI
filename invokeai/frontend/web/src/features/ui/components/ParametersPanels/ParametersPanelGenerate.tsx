@@ -2,6 +2,7 @@ import { Box, Flex } from '@invoke-ai/ui-library';
 import { useStore } from '@nanostores/react';
 import { useAppSelector } from 'app/store/storeHooks';
 import { overlayScrollbarsParams } from 'common/components/OverlayScrollbars/constants';
+import { useIsMobile } from 'common/hooks/useIsMobile';
 import { selectIsCogView4, selectIsExternal, selectIsSDXL } from 'features/controlLayers/store/paramsSlice';
 import { Prompts } from 'features/parameters/components/Prompts/Prompts';
 import { AdvancedSettingsAccordion } from 'features/settingsAccordions/components/AdvancedSettingsAccordion/AdvancedSettingsAccordion';
@@ -26,6 +27,25 @@ export const ParametersPanelGenerate = memo(() => {
   const isCogview4 = useAppSelector(selectIsCogView4);
   const isExternal = useAppSelector(selectIsExternal);
   const isStylePresetsMenuOpen = useStore($isStylePresetsMenuOpen);
+  const isMobile = useIsMobile();
+
+  if (isMobile) {
+    // On phone-width screens the parameters panel flows to natural height so the whole tab
+    // scrolls as a single page (the desktop `h="full"` + absolute overlay-scrollbox would
+    // otherwise create a nested, fixed-height inner scroll region that feels like a squished desktop).
+    return (
+      <Flex w="full" flexDir="column" gap={2}>
+        <StylePresetMenuTrigger />
+        {isStylePresetsMenuOpen && <StylePresetMenu />}
+        <Prompts />
+        <GenerateTabImageSettingsAccordion />
+        <GenerationSettingsAccordion />
+        {isSDXL && <RefinerSettingsAccordion />}
+        {!isCogview4 && !isExternal && <AdvancedSettingsAccordion />}
+        {isExternal && <ExternalSettingsAccordion />}
+      </Flex>
+    );
+  }
 
   return (
     <Flex w="full" h="full" flexDir="column" gap={2}>
