@@ -3651,7 +3651,10 @@
         },
         "mobile": {
             "desktopOnlyTab": "This view is optimized for larger screens. Open Invoke on a tablet or desktop for the full experience.",
-            "generateActionBar": "Generate"
+            "generateActionBar": "Generate",
+            "workflowsBrowse": "Browse",
+            "workflowsActive": "Workflow",
+            "workflowsViewer": "Viewer"
         },
         "panels": {
             "launchpad": "Launchpad",

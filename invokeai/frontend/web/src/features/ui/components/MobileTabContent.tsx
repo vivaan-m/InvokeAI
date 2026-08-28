@@ -12,11 +12,17 @@ import { selectActiveTab } from 'features/ui/store/uiSelectors';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MobileWorkflowsTab } from './MobileWorkflowsTab';
+
 export const MobileTabContent = memo(() => {
   const tab = useAppSelector(selectActiveTab);
 
   if (tab === 'generate') {
     return <MobileGenerateTab />;
+  }
+
+  if (tab === 'workflows') {
+    return <MobileWorkflowsTab />;
   }
 
   // Other tabs currently keep the desktop dockview experience. They remain usable on tablets; on
